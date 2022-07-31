@@ -29,6 +29,13 @@
             {
               "client_id": "249772049184-7jcvavb7fdei07e8s1vml02398jsl1mi.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "249772049184-4lj7frbbk2e7j0rpcdtsa1itj6rghkil.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.maptest"
+              }
             }
           ]
         }

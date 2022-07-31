@@ -1,36 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:maptest/constants/colors.dart';
+import 'package:maptest/presentation/widgets/intro_texts.dart';
+
+import '../../constants/string.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key}) : super(key: key);
   String? phoneNumber;
-  Widget _buildIntroTexts() {
-    return Column(
-      children: [
-        const Text(
-          'What is your phone number?',
-          style: TextStyle(
-            fontSize: 24,
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(
-          height: 30,
-        ),
-        Container(
-          margin: const EdgeInsets.symmetric(horizontal: 2),
-          child: const Text(
-            'Please entre your phone number to verify your account.',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 18,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+  final GlobalKey<FormState> _phoneFromKey = GlobalKey<FormState>();
 
   Widget _buildPhoneFromField() {
     return Row(
@@ -83,8 +60,8 @@ class LoginScreen extends StatelessWidget {
                 }
                 return null;
               }),
-              onSaved: (newValue) {
-                phoneNumber = newValue!;
+              onChanged: (newValue) {
+                phoneNumber = newValue;
               },
             ),
           ),
@@ -102,11 +79,14 @@ class LoginScreen extends StatelessWidget {
         );
   }
 
-  _buildNextButton() {
+  _buildNextButton(BuildContext context) {
     return Align(
       alignment: Alignment.centerRight,
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: () {
+          print(phoneNumber);
+          Navigator.of(context).pushNamed(optScreen, arguments: phoneNumber);
+        },
         style: ElevatedButton.styleFrom(
             minimumSize: Size(110, 50),
             primary: Colors.black,
@@ -131,21 +111,22 @@ class LoginScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
           child: Form(
-            key: UniqueKey(),
+            key: _phoneFromKey,
             child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 32, vertical: 80),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildIntroTexts(),
+                  TextApp().buildIntroTexts('What is your phone number',
+                      'Please entre your phone number to verify your account.'),
                   const SizedBox(
-                    height: 110,
+                    height: 80,
                   ),
                   _buildPhoneFromField(),
                   SizedBox(
                     height: 70,
                   ),
-                  _buildNextButton(),
+                  _buildNextButton(context),
                 ],
               ),
             ),

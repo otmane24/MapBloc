@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:maptest/business_logic/cubit/phone_auth/phone_auth_cubit.dart';
 import 'package:maptest/constants/colors.dart';
 import 'package:maptest/presentation/widgets/intro_texts.dart';
 
@@ -55,12 +57,12 @@ class LoginScreen extends StatelessWidget {
               validator: ((value) {
                 if (value!.isEmpty) {
                   return 'Please entre your phone number!';
-                } else if (value.length < 10) {
+                } else if (value.length < 9) {
                   return 'Too short for a phone number !';
                 }
                 return null;
               }),
-              onChanged: (newValue) {
+              onSaved: (newValue) {
                 phoneNumber = newValue;
               },
             ),
@@ -79,16 +81,27 @@ class LoginScreen extends StatelessWidget {
         );
   }
 
-  _buildNextButton(BuildContext context) {
+  Future<void> _register(BuildContext context) async {
+    if (!_phoneFromKey.currentState!.validate()) {
+      Navigator.pop(context);
+      return;
+    } else {
+      Navigator.pop(context);
+      _phoneFromKey.currentState!.save();
+      BlocProvider.of<PhoneAuthCubit>(context).submitPhoneNumber(phoneNumber!);
+    }
+  }
+
+  Widget _buildNextButton(BuildContext context) {
     return Align(
       alignment: Alignment.centerRight,
       child: ElevatedButton(
         onPressed: () {
-          print(phoneNumber);
-          Navigator.of(context).pushNamed(optScreen, arguments: phoneNumber);
+          showProgresseIndicator(context);
+          _register(context);
         },
         style: ElevatedButton.styleFrom(
-            minimumSize: Size(110, 50),
+            minimumSize: const Size(110, 50),
             primary: Colors.black,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(6),
@@ -101,6 +114,55 @@ class LoginScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  showProgresseIndicator(BuildContext context) {
+    AlertDialog alertDialog = const AlertDialog(
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+      content: Center(
+        child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+        ),
+      ),
+    );
+    showDialog(
+      context: context,
+      barrierColor: Colors.white.withOpacity(0),
+      barrierDismissible: false,
+      builder: ((context) {
+        return alertDialog;
+      }),
+    );
+  }
+
+  Widget _buildPhoneNumberSubmitedBlod() {
+    return BlocListener<PhoneAuthCubit, PhoneAuthState>(
+      listenWhen: ((previous, current) {
+        return previous != current;
+      }),
+      listener: (context, state) {
+        if (state is PhoneAuthLoading) {
+          showProgresseIndicator(context);
+        }
+        if (state is PhoneAuthSubmited) {
+          Navigator.of(context).pop();
+          Navigator.of(context).pushNamed(optScreen, arguments: phoneNumber);
+        }
+        if (state is PhoneAuthError) {
+          Navigator.of(context).pop();
+          String errorMsg = (state).errorMsg;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(errorMsg),
+              backgroundColor: Colors.black,
+              duration: Duration(seconds: 3),
+            ),
+          );
+        }
+      },
+      child: Container(),
     );
   }
 
@@ -123,10 +185,11 @@ class LoginScreen extends StatelessWidget {
                     height: 80,
                   ),
                   _buildPhoneFromField(),
-                  SizedBox(
+                  const SizedBox(
                     height: 70,
                   ),
                   _buildNextButton(context),
+                  _buildPhoneNumberSubmitedBlod(),
                 ],
               ),
             ),

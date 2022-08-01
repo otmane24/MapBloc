@@ -1,11 +1,15 @@
 // ignore_for_file: prefer_typing_uninitialized_variables
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:maptest/constants/colors.dart';
+import 'package:maptest/constants/string.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
+import '../../business_logic/cubit/phone_auth/phone_auth_cubit.dart';
+
 class OtpScreen extends StatefulWidget {
-  const OtpScreen({Key? key, required this.phoneNumber}) : super(key: key);
+  OtpScreen({Key? key, required this.phoneNumber}) : super(key: key);
   final phoneNumber;
 
   @override
@@ -13,6 +17,7 @@ class OtpScreen extends StatefulWidget {
 }
 
 class _OtpScreenState extends State<OtpScreen> {
+  late String optCode;
   Widget _buildIntroTexts() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,8 +81,8 @@ class _OtpScreenState extends State<OtpScreen> {
         animationDuration: Duration(milliseconds: 300),
         backgroundColor: Colors.white,
         enableActiveFill: true,
-        onCompleted: (code) {
-          // optCode = code ;
+        onCompleted: (submitedCode) {
+          optCode = submitedCode;
           print("Completed");
         },
         onChanged: (value) {
@@ -93,11 +98,18 @@ class _OtpScreenState extends State<OtpScreen> {
     );
   }
 
-  _buildNextButton() {
+  void _login(BuildContext context) {
+    BlocProvider.of<PhoneAuthCubit>(context).submiteOTP(this.optCode);
+  }
+
+  _buildNextButton(BuildContext context) {
     return Align(
       alignment: Alignment.centerRight,
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: () {
+          showProgresseIndicator(context);
+          _login(context);
+        },
         style: ElevatedButton.styleFrom(
             minimumSize: Size(110, 50),
             primary: Colors.black,
@@ -112,6 +124,55 @@ class _OtpScreenState extends State<OtpScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  showProgresseIndicator(BuildContext context) {
+    AlertDialog alertDialog = const AlertDialog(
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+      content: Center(
+        child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+        ),
+      ),
+    );
+    showDialog(
+      context: context,
+      barrierColor: Colors.white.withOpacity(0),
+      barrierDismissible: false,
+      builder: ((context) {
+        return alertDialog;
+      }),
+    );
+  }
+
+  Widget _buildPhoneNumberSubmitedBlod() {
+    return BlocListener<PhoneAuthCubit, PhoneAuthState>(
+      listenWhen: ((previous, current) {
+        return previous != current;
+      }),
+      listener: (context, state) {
+        if (state is PhoneAuthLoading) {
+          showProgresseIndicator(context);
+        }
+        if (state is PhoneOPTVerified) {
+          Navigator.of(context).pop();
+          Navigator.of(context).pushReplacementNamed(mapScreen);
+        }
+        if (state is PhoneAuthError) {
+          Navigator.of(context).pop();
+          String errorMsg = (state).errorMsg;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(errorMsg),
+              backgroundColor: Colors.black,
+              duration: Duration(seconds: 3),
+            ),
+          );
+        }
+      },
+      child: Container(),
     );
   }
 
@@ -133,7 +194,8 @@ class _OtpScreenState extends State<OtpScreen> {
                 const SizedBox(
                   height: 70,
                 ),
-                _buildNextButton()
+                _buildNextButton(context),
+                _buildPhoneNumberSubmitedBlod(),
               ],
             ),
           ),

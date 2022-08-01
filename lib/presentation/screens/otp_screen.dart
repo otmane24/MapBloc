@@ -129,10 +129,10 @@ class _OtpScreenState extends State<OtpScreen> {
 
   showProgresseIndicator(BuildContext context) {
     AlertDialog alertDialog = const AlertDialog(
-      elevation: 0,
+      elevation: 1,
       backgroundColor: Colors.transparent,
       content: Center(
-        child: CircularProgressIndicator(
+        child: CircularProgressIndicator.adaptive(
           valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
         ),
       ),
@@ -161,7 +161,7 @@ class _OtpScreenState extends State<OtpScreen> {
           Navigator.of(context).pushReplacementNamed(mapScreen);
         }
         if (state is PhoneAuthError) {
-          Navigator.of(context).pop();
+          // Navigator.of(context).pop();
           String errorMsg = (state).errorMsg;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(

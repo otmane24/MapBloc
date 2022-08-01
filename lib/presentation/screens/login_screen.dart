@@ -122,7 +122,7 @@ class LoginScreen extends StatelessWidget {
       elevation: 0,
       backgroundColor: Colors.transparent,
       content: Center(
-        child: CircularProgressIndicator(
+        child: CircularProgressIndicator.adaptive(
           valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
         ),
       ),

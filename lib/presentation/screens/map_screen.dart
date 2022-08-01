@@ -147,28 +147,3 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 }
-/*Container(
-      child: BlocProvider<PhoneAuthCubit>(
-        create: (context) => phoneAuthCubit,
-        child: ElevatedButton(
-          onPressed: () async {
-            await phoneAuthCubit.logOut();
-            Navigator.pushReplacementNamed(context, loginScreen);
-          },
-          style: ElevatedButton.styleFrom(
-              minimumSize: Size(110, 50),
-              primary: Colors.black,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(6),
-              )),
-          child: const Text(
-            'Log out',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-            ),
-          ),
-        ),
-      ),
-    );
- */

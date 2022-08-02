@@ -23,7 +23,7 @@ class PlaceWebService {
         'input': place,
         'type': 'establishment',
         'sessiontoken': sessionToken,
-        'components': 'country:dz',
+        'components': 'country:us',
         'key': googleMapAPi,
       });
       // print(response.data);

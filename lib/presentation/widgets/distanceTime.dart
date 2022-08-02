@@ -18,7 +18,7 @@ class DistanceTime extends StatelessWidget {
       visible: isDistanceTimeVisible,
       child: Positioned(
         top: 0,
-        bottom: 570,
+        bottom: 560,
         left: 0,
         right: 0,
         child: Row(
@@ -53,7 +53,7 @@ class DistanceTime extends StatelessWidget {
               ),
             ),
             const SizedBox(
-              width: 30,
+              width: 24,
             ),
             Flexible(
               flex: 1,

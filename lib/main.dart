@@ -24,7 +24,7 @@ void main() async {
     if (user == null) {
       initialRoute = loginScreen;
     } else {
-      initialRoute = mapScreen;
+      initialRoute = mapScreen; // ;
     }
   });
   runApp(MyApp(

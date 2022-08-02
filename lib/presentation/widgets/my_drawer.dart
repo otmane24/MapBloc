@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:maptest/constants/colors.dart';
+import '../../constants/colors.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../business_logic/cubit/phone_auth/phone_auth_cubit.dart';
@@ -44,8 +44,8 @@ class MyDrawer extends StatelessWidget {
           BlocProvider<PhoneAuthCubit>(
             create: (context) => phoneAuthCubit,
             child: Text(
-              '${generateCountryFlag()} +213 ${phoneAuthCubit.getLoggedInUser().phoneNumber}',
-              style: TextStyle(
+              '${generateCountryFlag()}  ${phoneAuthCubit.getLoggedInUser().phoneNumber}',
+              style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -165,7 +165,7 @@ class MyDrawer extends StatelessWidget {
               leadingIcon: Icons.logout,
               title: 'LogOut',
               color: Colors.red,
-              trailing: SizedBox(),
+              trailing: const SizedBox(),
               onTap: () async {
                 await phoneAuthCubit.logOut();
                 Navigator.pushReplacementNamed(context, loginScreen);

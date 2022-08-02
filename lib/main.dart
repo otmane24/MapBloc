@@ -4,12 +4,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import 'package:flutter/material.dart';
-import 'package:maptest/app_router.dart';
-import 'package:maptest/constants/string.dart';
+import 'app_router.dart';
+import 'constants/string.dart';
 
 import 'firebase_options.dart';
 
 late String initialRoute;
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (Platform.isIOS) {

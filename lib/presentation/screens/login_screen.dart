@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:maptest/business_logic/cubit/phone_auth/phone_auth_cubit.dart';
-import 'package:maptest/constants/colors.dart';
-import 'package:maptest/presentation/widgets/intro_texts.dart';
+import '../../business_logic/cubit/phone_auth/phone_auth_cubit.dart';
+import '../../constants/colors.dart';
+import '../widgets/intro_texts.dart';
 
 import '../../constants/string.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key}) : super(key: key);
   String? phoneNumber;
-  final GlobalKey<FormState> _phoneFromKey = GlobalKey<FormState>();
+  GlobalKey<FormState> _phoneFromKey = GlobalKey<FormState>();
 
   Widget _buildPhoneFromField() {
     return Row(
